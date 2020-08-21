@@ -1,4 +1,5 @@
 from math import ceil, floor
+from typing import List
 import pygame
 import numpy as np
 from window import window
@@ -6,9 +7,11 @@ from color import *
 
 
 class coordinate_system(window):
-    def __init__(self, width=800, height=600, window_title='Title placeholder',  resolution=20, origin=np.array([0, 0]), invert_y=False, show_grid=True, tick=1, tick_size=4, show_pos=False, full_screen=True, plot_surf_size=(-1, -1)) -> None:
+    def __init__(self, width=800, height=600, window_title='Title placeholder',  resolution=40, origin=np.array([0, 0]), invert_y=True, show_grid=True, tick=1, tick_size=4, tick_label=1, show_pos=False, full_screen=True, plot_surf_size=(-1, -1), plot_shift=np.array([40, 40])) -> None:
         super().__init__(width, height, window_title, self.handle_event)
-        self.screen.fill(LIGHTGREY)
+        self.background = self.screen.subsurface((0, 0, width, height))
+        self.background.fill(LIGHTGREY)
+        self.plot_shift = plot_shift
         if plot_surf_size[0] < 0:
             plot_surf_size_x = width - 40
         else:
@@ -25,6 +28,9 @@ class coordinate_system(window):
             self.plotter_w = plot_surf_size_x
             self.plotter_h = plot_surf_size_y
             self.plot_surface = self.screen.subsurface((width - plot_surf_size_x, height - plot_surf_size_y, plot_surf_size_x, plot_surf_size_y))
+        self.plot_surface.fill(WHITE)
+        bg_node = self.render_tree.add_child(self.background, self.background_ev, self.render_background)
+        bg_node.add_child(self.plot_surface, render_method=self.render_plot)
         self.resolution = resolution
         self.origin = origin
         self.invert_y = invert_y
@@ -38,18 +44,18 @@ class coordinate_system(window):
 
     def handle_event(self, *args):
         running = True
-        if self.show_grid:
-            self.draw_grid()
-        if self.show_pos:
-            self.render_pos()
-        pygame.display.update()
         while running:
-            for event in pygame.event.get():
+            events = pygame.event.get()
+            for event in events:
                 if event.type == pygame.QUIT:
                     running = False
-            
+            self.render_tree.update(events)
+            pygame.display.update()
         pygame.quit()
 
+    def background_ev(self, events):
+        if self.show_pos:
+            self.render_tree.get_element(self.background).set_update()
 
     def normalize_coords(self, disp_coord):
         x = (disp_coord[0] - self.origin[0]) / self.resolution
@@ -62,6 +68,15 @@ class coordinate_system(window):
         y = norm_coords[1] * self.resolution * -1 + self.origin[1] if self.invert_y else norm_coords[1] * self.resolution + self.origin[1]
         return np.array([x, y], dtype=int)
 
+    def render_pos(self):
+        pos = self.normalize_coords(self.get_mouse_pos_by_surface(self.plot_surface))
+        pos_text  = self.font.render(f"x: {pos[0]} y: {pos[1]}", False, (0, 0, 0))
+        self.background.blit(pos_text, (0, 0))
+
+    def get_mouse_pos_by_surface(self, surface):
+        offset = surface.get_rect()
+        pos = pygame.mouse.get_pos()
+        return np.array([pos[0] - offset.x, pos[1] - offset.y])
 
     def draw_grid(self):
         # draw axis x
@@ -112,8 +127,17 @@ class coordinate_system(window):
             tick_l = self.display_coords((l , tick))
             pygame.draw.line(self.plot_surface, BLACK, tick_r, tick_l)
             tick += self.tick
+        
+    def render_plot(self):
+        if self.show_grid:
+            self.draw_grid()
+
+    def render_background(self):
+        self.background.fill(LIGHTGREY)
+        if self.show_pos:
+            self.render_pos()
 
 
 
-w = coordinate_system(origin=np.array([380, 280]), full_screen=False)
+w = coordinate_system(origin=np.array([380, 280]), full_screen=False, show_pos=True)
 w.run()
