@@ -47,5 +47,44 @@
     \section{Window elements}
     \subsection{Description}
     Window elements is an abstract class of elements which are drawn onto the surface of the window application. They have a render 
-    method and an event handler, the event handler is called whenever a frame is done and a new frame is starting to be drawn.
+    method and an event handler, the event handler is called whenever a frame is done and a new frame is starting to be drawn. Each Window elements
+    has an array of children which are rendered from first element to last. Events are handled from last to first. Event handler can return
+    True if event should not be passed to other nodes(like mouse events that has been already handled, allowing for stacked elements without
+    stacked events).
+    \subsection{Class fields}
+    \begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|}
+        \hline
+        Field name & Type & Description\\
+        \hline
+        width & int & Defines the width of the window element in pixels\\
+        \hline
+        height & int & Defines the height of the window element in pixels\\
+        \hline
+        x & int & absolute x-Position of the element\\
+        \hline
+        y & int & absolut y-Position of the element\\
+        \hline
+        children & list of window\_element & Children window elements of itself. Elements that are out of the drawing field of itself are clipped.\\
+        \hline
+        state\_changed & Bool & True if the inner state of window element has changed. Redraws itself and all its children on next render if set True.\\
+        \hline
+    \end{tabular}
+    \subsection{Class methods}
+    \begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|}
+        \hline
+        Method name & Parameters & Description\\
+        \hline
+        \_\_init\_\_ &  & Initializes the class\\
+        \hline
+        \_\_str\_\_ & &String representation of the window class object\\
+        \hline
+        \_\_repr\_\_ & & String representation of the window class object in iterable objects\\
+        \hline
+        handle\_events & event & Handles incoming input events. event is a list of pygame events or single pygame event\\
+        \hline
+        render &  & renders itself and its children\\
+        \hline
+        update & force\_update & Rerenders the component if state\_chaged or force\_update is set to True\\
+        \hline
+    \end{tabular}
 \end{document}
