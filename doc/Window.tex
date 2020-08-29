@@ -64,9 +64,11 @@
         \hline
         y & int & absolut y-Position of the element\\
         \hline
-        children & list of window\_element & Children window elements of itself. Elements that are out of the drawing field of itself are clipped.\\
+        children & list of window elements & Children window elements of itself. Elements that are out of the drawing field of itself are clipped.\\
         \hline
         state\_changed & Bool & True if the inner state of window element has changed. Redraws itself and all its children on next render if set True.\\
+        \hline
+        surface & Pygame Surface & Surface on which the element draws\\
         \hline
     \end{tabular}
     \subsection{Class methods}
