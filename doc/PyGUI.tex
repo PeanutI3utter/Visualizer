@@ -1,0 +1,21 @@
+\documentclass{article}
+\usepackage{datetime, hyperref}
+
+\title{PyGUI Documentation}
+\author{Si Jun Kwon}
+\newdate{date}{01}{09}{2020}
+\date{\displaydate{date}}
+
+\begin{document}
+    \maketitle
+    \newpage
+    \tableofcontents
+    \newpage
+    \section{What is PyGUI?}
+    PyGUI is a GUI library powered by \href{https://www.pygame.org/}{pygame}. PyGUI provides
+    standard GUI elements which is drawn as pygame surfaces on a pygame window. The goal of this library
+    is to provide a way to create a GUI app with pygame in a simple manner. PyGUI handles all the drawing,
+    placings and event propagation on the pygame window. Custom elements can be created as classes that
+    implement the render\_element interface. The programmer can alter the drawing algorithms or use the 
+    simple implemented drawing algorithm(Painter's Algorithm).
+\end{document}

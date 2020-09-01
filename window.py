@@ -43,7 +43,7 @@ class window(object):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption(self.window_title)
-        self.window_elements = window_element(self.width, self.height, 0, 0, ref="root", surface=self.screen)
+        self.window_elements = render_element(self.width, self.height, 0, 0, ref="root", surface=self.screen)
 
 
     
@@ -78,7 +78,7 @@ class window(object):
         self.event_loop()
 
 
-class window_element:
+class render_element:
     """
     An element that is rendered in the window. Each element has its own pygame surface, render method and event handler.
 
