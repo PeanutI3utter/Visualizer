@@ -1,1 +1,1 @@
-# Visualizer
+# A GUI Library for PyGame
