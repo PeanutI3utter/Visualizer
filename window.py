@@ -121,6 +121,10 @@ class render_element:
             String used to refer to window element. Used to search element in the window element tree. 
         surface : Pygame Surface
             Render surface of the window element
+        layer : int 
+            elements with higher layer are drawn after elements with lower layer
+        overlaps : list<render_elements>
+            elements which surface overlaps with the rendering surfaces of other elements in the render tree(except direct children)
         """
         self.width = width
         self.height = height
@@ -129,7 +133,12 @@ class render_element:
         self.children = []
         self.__update__ = True
         self.ref = ref
-        self.surface = surface
+        if surface is None:
+            self.surface = pygame.Surface((width, height))  
+        else:
+            self.surface = surface
+        self.layer = -1
+        self.overlaps = []
 
 
     def __str__(self):

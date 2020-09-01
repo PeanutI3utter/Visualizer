@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{scrartcl}
 \usepackage{datetime, hyperref}
 
 \title{PyGUI Documentation}
@@ -16,6 +16,43 @@
     standard GUI elements which is drawn as pygame surfaces on a pygame window. The goal of this library
     is to provide a way to create a GUI app with pygame in a simple manner. PyGUI handles all the drawing,
     placings and event propagation on the pygame window. Custom elements can be created as classes that
-    implement the render\_element interface. The programmer can alter the drawing algorithms or use the 
-    simple implemented drawing algorithm(Painter's Algorithm).
+    implement the render\_element interface. PyGUI only rerenders elements that have changed their visual 
+    rendering which is defined by the programmer.
+    \section{Documentation}
+    \subsection{Window}
+    The window class represents a window application. It is powered by \href{https://www.pygame.org/}{pygame}. The window has a tree of window elements which
+    it uses to render the window elements each frame. The tree is traversed with each element receiving
+    events occuring and are tagged to be rerendered when their state has changed.
+    \subsubsection{Class fields}
+    \begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|}
+        \hline
+        Field name & Type & Description\\
+        \hline
+        width & int & Defines the width of the window in pixels\\
+        \hline
+        height & int & Defines the height of the window in pixels\\
+        \hline
+        windowtitle & str & The title of the window(show in the bar)\\
+        \hline
+        event\_loop & function & Event loop of the window application. If not specified differently just calls render on its window elements.\\
+        \hline
+        screen & surface object & Surface object(PyGame object) which window elements are drawn on\\
+        \hline
+        window\_elements & window\_element& Tree of window elements which is traversed whenever the new frame starts.\\
+        \hline
+    \end{tabular}
+    \subsubsection{Class methods}
+    \begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|}
+        \hline
+        Method name & Parameters & Description\\
+        \hline
+        \_\_init\_\_ &  & Initializes the class and pygame\\
+        \hline
+        \_\_str\_\_ & &String representation of the window class object\\
+        \hline
+        \_\_repr\_\_ & & String representation of the window class object in iterable objects\\
+        \hline
+        run & & Runs the event loop of the application.\\
+        \hline
+    \end{tabular}
 \end{document}
