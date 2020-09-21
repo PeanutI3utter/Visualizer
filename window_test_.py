@@ -2,7 +2,7 @@ from math import ceil, floor
 from typing import List
 import pygame
 import numpy as np
-from window import window
+from window_ import window
 from color import *
 
 

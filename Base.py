@@ -43,7 +43,7 @@ class window(object):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption(self.window_title)
-        self.window_elements = render_element(self.width, self.height, 0, 0, ref="root", surface=self.screen)
+        self.window_elements = element(self.width, self.height, 0, 0, ref="root", surface=self.screen)
 
 
     
@@ -59,6 +59,8 @@ class window(object):
                     self.run = False
             self.window_elements.handle_events(events)
             self.window_elements.update(False)
+            
+            pygame.display.flip()
         pygame.quit(); sys.exit()
 
 
@@ -78,7 +80,7 @@ class window(object):
         self.event_loop()
 
 
-class render_element:
+class element:
     """
     An element that is rendered in the window. Each element has its own pygame surface, render method and event handler.
 
@@ -148,6 +150,9 @@ class render_element:
     def __repr__(self) -> str:
         return self.__str__()
 
+
+    def mouse_hover(self, mouse_pos) -> bool:
+        return mouse_pos[0] >= self.x and mouse_pos[0] <= self.x + self.width and mouse_pos[1] >= self.y and mouse_pos[1] <= self.y + self.height
 
     def handle_events(self, event, **kwargs):
         """
@@ -264,4 +269,23 @@ class render_element:
             self.render()
             for child in self.children:
                 child.update(True)
-                self.surface.blit(child.surface)
+                self.surface.blit(child.surface, (child.x, child.y))
+
+
+class listener_elements(element):
+    def __init__(self, width, height, x, y, ref="", surface=None) -> None:
+        super().__init__(width, height, x, y, ref="", surface=surface)
+        self.listener_funcs = []
+
+
+    def add_listener_func(self, func):
+        self.listener_funcs.append(func)
+
+
+class on_click_element(listener_elements):
+    def handle_events(self, event, **kwargs):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = event.pos
+            if self.mouse_hover(mouse_pos):
+                for listener_func in self.listener_funcs: # alert all listeners
+                    listener_func()
